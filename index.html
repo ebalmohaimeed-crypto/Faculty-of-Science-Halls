@@ -439,6 +439,20 @@
   }
   .btn-export:hover { border-color: var(--teal); color: var(--teal); }
 
+
+  .admin-only { display: none; }
+  .admin-mode .admin-only { display: inline-flex; }
+  .login-btn {
+    height: 40px; padding: 0 16px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 10px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
   @media (max-width: 600px) {
     header { padding: .75rem 1rem; }
     .controls, .floor-section, .stats-bar { padding-right: 1rem; padding-left: 1rem; }
@@ -456,7 +470,7 @@
       <p>إدارة القاعات الدراسية</p>
     </div>
   </div>
-  <div class="header-count">إجمالي القاعات: <span id="total-count">0</span></div>
+  <div style="display:flex;align-items:center;gap:10px"><div class="header-count">إجمالي القاعات: <span id="total-count">0</span></div><button class="login-btn" onclick="toggleAdmin()" id="login-btn">🔐 دخول المشرف</button></div>
 </header>
 
 <div class="stats-bar">
@@ -505,7 +519,7 @@
     <option value="صغيرة">صغيرة</option>
   </select>
   <button class="btn-export" onclick="window.print()">طباعة</button>
-  <button class="btn-add" onclick="openAdd()">+ إضافة قاعة</button>
+  <button class="btn-add admin-only" onclick="openAdd()">+ إضافة قاعة</button>
 </div>
 
 <div id="content"></div>
@@ -516,6 +530,28 @@
 </div>
 
 <script>
+
+const ADMIN_PASSWORD = '1234';
+let isAdmin = false;
+
+function toggleAdmin() {
+  if (isAdmin) {
+    isAdmin = false;
+    document.body.classList.remove('admin-mode');
+    document.getElementById('login-btn').textContent = '🔐 دخول المشرف';
+    return;
+  }
+  const pwd = prompt('أدخلي كلمة المرور:');
+  if (pwd === ADMIN_PASSWORD) {
+    isAdmin = true;
+    document.body.classList.add('admin-mode');
+    document.getElementById('login-btn').textContent = '🔓 خروج';
+    alert('مرحباً! أنتِ الآن في وضع المشرف');
+  } else if (pwd !== null) {
+    alert('كلمة المرور غلط');
+  }
+}
+
 const DEVICES = ['بروجكتر','سبورة ذكية','واي فاي','مكبر صوت','شاشة تفاعلية','سبورة عادية'];
 
 // ── البيانات الحقيقية من ملف حصر القاعات ──
@@ -793,8 +829,8 @@ function openRoom(id) {
     <div class="section-label">ملاحظات</div>
     <div class="notes-box">${r.notes || 'لا توجد ملاحظات'}</div>
     <div class="action-row">
-      <button class="btn-edit" onclick="openEdit(${r.id})">تعديل البيانات</button>
-      <button class="btn-del" onclick="confirmDelete(${r.id})">حذف</button>
+      <button class="btn-edit admin-only" onclick="openEdit(${r.id})">تعديل البيانات</button>
+      <button class="btn-del admin-only" onclick="confirmDelete(${r.id})">حذف</button>
     </div>
   `;
   document.getElementById('overlay').classList.add('active');
