@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>قاعات ومعامل كلية العلوم — جامعة القصيم</title>
+<title>قاعات كلية العلوم — شطر الطالبات</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap');
 
@@ -447,8 +447,8 @@
   <div class="header-logo">
     <div class="logo-mark">ك</div>
     <div class="header-text">
-      <h1>قاعات ومعامل كلية العلوم</h1>
-      <p>جامعة القصيم — إدارة القاعات الدراسية</p>
+      <h1>قاعات كلية العلوم — شطر الطالبات</h1>
+      <p>إدارة القاعات الدراسية</p>
     </div>
   </div>
   <div class="header-count">إجمالي القاعات: <span id="total-count">0</span></div>
@@ -511,7 +511,7 @@
 </div>
 
 <script>
-const DEVICES = ['بروجكتر','سبورة ذكية','مكيف','واي فاي','كاميرا','مكبر صوت','شاشة تفاعلية','سبورة عادية'];
+const DEVICES = ['بروجكتر','سبورة ذكية','واي فاي','مكبر صوت','شاشة تفاعلية','سبورة عادية'];
 
 // ── البيانات الحقيقية من ملف حصر القاعات ──
 let rooms = [
@@ -584,12 +584,12 @@ let rooms = [
   { id:62, num:'4047', floor:'الدور الثاني', size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
 ];
 
-// ── تحميل من localStorage إن وُجد ──
-function loadData_disabled() {
+// ── تحميل وحفظ من localStorage ──
+function loadData() {
   const saved = localStorage.getItem('qu_rooms');
   if (saved) rooms = JSON.parse(saved);
 }
-function saveData_disabled() {
+function saveData() {
   localStorage.setItem('qu_rooms', JSON.stringify(rooms));
 }
 
@@ -801,6 +801,7 @@ function saveEdit(id) {
   r.notes    = document.getElementById('e-notes').value.trim();
   
   closeModal();
+  saveData();
   render();
 }
 
@@ -808,8 +809,8 @@ function confirmDelete(id) {
   const r = rooms.find(x => x.id === id);
   if (confirm(`هل تريد حذف قاعة ${r.num}؟`)) {
     rooms = rooms.filter(x => x.id !== id);
-    
     closeModal();
+    saveData();
     render();
   }
 }
@@ -880,6 +881,7 @@ function saveNew() {
   });
   
   closeModal();
+  saveData();
   render();
 }
 
@@ -887,6 +889,7 @@ function closeModal() {
   document.getElementById('overlay').classList.remove('active');
 }
 
+loadData();
 render();
 </script>
 </body>
