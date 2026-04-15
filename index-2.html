@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قاعات كلية العلوم — شطر الطالبات</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap');
+
+  :root {
+    --navy: #1A2E6E;
+    --teal: #1A8C8C;
+    --mint: #02B5A0;
+    --gold: #E8A020;
+    --red: #C0392B;
+    --bg: #F4F7FC;
+    --surface: #FFFFFF;
+    --border: #DDE4F0;
+    --text: #1A2035;
+    --muted: #6B7A99;
+    --success-bg: #E8F5F0;
+    --success-text: #0F6E56;
+    --warn-bg: #FFF3CD;
+    --warn-text: #8B6000;
+    --danger-bg: #FDECEA;
+    --danger-text: #C0392B;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--navy);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 2px 12px rgba(26,46,110,0.18);
+  }
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-mark {
+    width: 40px; height: 40px;
+    background: var(--teal);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 600; color: #fff;
+  }
+  .header-text h1 { font-size: 16px; font-weight: 600; color: #fff; }
+  .header-text p { font-size: 12px; color: #8AADDD; }
+  .header-count {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: #fff;
+  }
+  .header-count span { color: var(--mint); font-weight: 600; }
+
+  /* ── Stats Bar ── */
+  .stats-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: .75rem 2rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .stat-item { display: flex; align-items: center; gap: 8px; }
+  .stat-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .stat-label { font-size: 13px; color: var(--muted); }
+  .stat-num { font-size: 14px; font-weight: 600; color: var(--text); }
+
+  /* ── Controls ── */
+  .controls {
+    padding: 1.25rem 2rem;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .search-wrap {
+    flex: 1; min-width: 200px;
+    position: relative;
+  }
+  .search-icon {
+    position: absolute;
+    right: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 14px;
+    pointer-events: none;
+  }
+  input[type="text"] {
+    width: 100%;
+    height: 40px;
+    padding: 0 38px 0 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color .15s;
+  }
+  input[type="text"]:focus { border-color: var(--teal); }
+  select {
+    height: 40px;
+    padding: 0 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+  select:focus { border-color: var(--teal); }
+  .btn-add {
+    height: 40px;
+    padding: 0 20px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .15s;
+    white-space: nowrap;
+  }
+  .btn-add:hover { background: #243a8a; }
+
+  /* ── Floor section ── */
+  .floor-section { padding: 0 2rem 1.5rem; }
+  .floor-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: .75rem;
+  }
+  .floor-badge {
+    background: var(--navy);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 14px;
+    border-radius: 20px;
+  }
+  .floor-line { flex: 1; height: 1px; background: var(--border); }
+  .floor-count { font-size: 12px; color: var(--muted); }
+
+  /* ── Grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 10px;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: border-color .15s, transform .15s, box-shadow .15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--teal);
+    border-radius: 0 14px 14px 0;
+  }
+  .card.maint::before { background: var(--gold); }
+  .card.closed::before { background: var(--red); }
+  .card:hover {
+    border-color: var(--teal);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26,140,140,0.12);
+  }
+  .card-num { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+  .card-size { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+  .card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .cap-badge {
+    background: #EEF2FF;
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-ready { background: #1A8040; }
+  .dot-maint { background: var(--gold); }
+  .dot-closed { background: var(--red); }
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .badge-ready { background: var(--success-bg); color: var(--success-text); }
+  .badge-maint { background: var(--warn-bg); color: var(--warn-text); }
+  .badge-closed { background: var(--danger-bg); color: var(--danger-text); }
+  .card-devices { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+  .dev-tag {
+    font-size: 10px;
+    background: #F0F4FF;
+    color: #3A5298;
+    padding: 2px 6px;
+    border-radius: 5px;
+  }
+
+  /* ── Modal ── */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(10,20,60,0.45);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+  .overlay.active { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface);
+    border-radius: 18px;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(16px);
+    transition: transform .2s;
+  }
+  .overlay.active .modal { transform: translateY(0); }
+  .modal-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-num { font-size: 22px; font-weight: 600; color: var(--navy); }
+  .modal-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .close-btn {
+    width: 32px; height: 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    transition: background .1s;
+  }
+  .close-btn:hover { background: var(--bg); }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+  .info-box {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: .75rem 1rem;
+  }
+  .info-box-label { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+  .info-box-val { font-size: 15px; font-weight: 600; color: var(--text); }
+  .devices-section { margin-bottom: 1rem; }
+  .section-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .04em; }
+  .devices-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dev-pill {
+    background: #EEF2FF;
+    color: #3A5298;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .notes-box {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: .75rem 1rem;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 1rem;
+    min-height: 48px;
+    line-height: 1.6;
+  }
+  .action-row { display: flex; gap: 8px; }
+  .btn-edit {
+    flex: 1; height: 40px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-edit:hover { background: #243a8a; }
+  .btn-del {
+    height: 40px; padding: 0 16px;
+    background: none;
+    border: 1.5px solid #FDECEA;
+    color: var(--red);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-del:hover { background: #FDECEA; }
+
+  /* ── Edit Form ── */
+  .edit-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-bottom: 4px; margin-top: 12px; display: block; }
+  .edit-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+  }
+  .edit-input:focus { border-color: var(--teal); }
+  .edit-select {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    cursor: pointer;
+  }
+  .edit-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    resize: vertical;
+    height: 72px;
+  }
+  .cb-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .cb-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all .1s;
+  }
+  .cb-item input { display: none; }
+  .cb-item.checked { background: #EEF2FF; border-color: #8AA6E8; color: #3A5298; font-weight: 500; }
+  .form-actions { display: flex; gap: 8px; margin-top: 1.25rem; }
+  .btn-save {
+    flex: 1; height: 40px;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .btn-cancel {
+    height: 40px; padding: 0 20px;
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  /* ── Empty ── */
+  .empty { text-align: center; padding: 3rem; color: var(--muted); font-size: 14px; }
+
+  /* ── Print button ── */
+  .btn-export {
+    height: 40px; padding: 0 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--muted);
+    background: var(--surface);
+    cursor: pointer;
+    transition: border-color .15s;
+    white-space: nowrap;
+  }
+  .btn-export:hover { border-color: var(--teal); color: var(--teal); }
+
+  @media (max-width: 600px) {
+    header { padding: .75rem 1rem; }
+    .controls, .floor-section, .stats-bar { padding-right: 1rem; padding-left: 1rem; }
+    .info-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo">
+    <div class="logo-mark">ك</div>
+    <div class="header-text">
+      <h1>قاعات كلية العلوم — شطر الطالبات</h1>
+      <p>إدارة القاعات الدراسية</p>
+    </div>
+  </div>
+  <div class="header-count">إجمالي القاعات: <span id="total-count">0</span></div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-dot" style="background:#1A8040"></div>
+    <span class="stat-label">جاهزة:</span>
+    <span class="stat-num" id="s-ready">0</span>
+  </div>
+  <div class="stat-item">
+    <div class="stat-dot" style="background:var(--gold)"></div>
+    <span class="stat-label">تحت الصيانة:</span>
+    <span class="stat-num" id="s-maint">0</span>
+  </div>
+  <div class="stat-item">
+    <div class="stat-dot" style="background:var(--red)"></div>
+    <span class="stat-label">مغلقة:</span>
+    <span class="stat-num" id="s-closed">0</span>
+  </div>
+  <div class="stat-item" style="margin-right:auto">
+    <span class="stat-label">إجمالي المقاعد:</span>
+    <span class="stat-num" id="s-seats">0</span>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder="ابحث عن قاعة..." oninput="render()">
+  </div>
+  <select id="f-floor" onchange="render()">
+    <option value="">كل الأدوار</option>
+    <option value="الدور الأرضي">الدور الأرضي</option>
+    <option value="الدور الأول">الدور الأول</option>
+    <option value="الدور الثاني">الدور الثاني</option>
+  </select>
+  <select id="f-status" onchange="render()">
+    <option value="">كل الحالات</option>
+    <option value="جاهزة">جاهزة</option>
+    <option value="صيانة">تحت الصيانة</option>
+    <option value="مغلقة">مغلقة</option>
+  </select>
+  <select id="f-size" onchange="render()">
+    <option value="">كل الأحجام</option>
+    <option value="كبيرة">كبيرة</option>
+    <option value="متوسطة">متوسطة</option>
+    <option value="صغيرة">صغيرة</option>
+  </select>
+  <button class="btn-export" onclick="window.print()">طباعة</button>
+  <button class="btn-add" onclick="openAdd()">+ إضافة قاعة</button>
+</div>
+
+<div id="content"></div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+const DEVICES = ['بروجكتر','سبورة ذكية','واي فاي','مكبر صوت','شاشة تفاعلية','سبورة عادية'];
+
+// ── البيانات الحقيقية من ملف حصر القاعات ──
+let rooms = [
+  // الدور الأرضي - 11 قاعة
+  { id:1,  num:'2003', floor:'الدور الأرضي', size:'كبيرة',    capacity:90,  status:'جاهزة', devices:['بروجكتر','مكيف'],                    notes:'' },
+  { id:2,  num:'2004', floor:'الدور الأرضي', size:'متوسطة',   capacity:40,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:3,  num:'2006', floor:'الدور الأرضي', size:'كبيرة',    capacity:75,  status:'جاهزة', devices:['بروجكتر','مكيف'],                    notes:'' },
+  { id:4,  num:'2007', floor:'الدور الأرضي', size:'كبيرة',    capacity:75,  status:'جاهزة', devices:['بروجكتر','مكيف'],                    notes:'' },
+  { id:5,  num:'2026', floor:'الدور الأرضي', size:'كبيرة',    capacity:65,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:6,  num:'2027', floor:'الدور الأرضي', size:'كبيرة',    capacity:75,  status:'جاهزة', devices:['بروجكتر','مكيف'],                    notes:'' },
+  { id:7,  num:'2028', floor:'الدور الأرضي', size:'كبيرة',    capacity:75,  status:'جاهزة', devices:['بروجكتر','مكيف'],                    notes:'' },
+  { id:8,  num:'2032', floor:'الدور الأرضي', size:'كبيرة',    capacity:90,  status:'جاهزة', devices:['بروجكتر','مكيف','سبورة عادية'],     notes:'' },
+  { id:9,  num:'2033', floor:'الدور الأرضي', size:'كبيرة',    capacity:90,  status:'جاهزة', devices:['بروجكتر','مكيف'],                    notes:'' },
+  { id:10, num:'2101', floor:'الدور الأرضي', size:'متوسطة',   capacity:45,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:11, num:'2107', floor:'الدور الأرضي', size:'صغيرة',    capacity:25,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+
+  // الدور الأول - 37 قاعة
+  { id:12, num:'3001', floor:'الدور الأول',  size:'كبيرة',    capacity:65,  status:'جاهزة', devices:['بروجكتر','مكيف'],                    notes:'' },
+  { id:13, num:'3002', floor:'الدور الأول',  size:'متوسطة',   capacity:60,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:14, num:'3003', floor:'الدور الأول',  size:'متوسطة',   capacity:40,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:15, num:'3004', floor:'الدور الأول',  size:'متوسطة',   capacity:45,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:16, num:'3005', floor:'الدور الأول',  size:'متوسطة',   capacity:60,  status:'جاهزة', devices:['بروجكتر','مكيف'],                    notes:'' },
+  { id:17, num:'3006', floor:'الدور الأول',  size:'متوسطة',   capacity:60,  status:'جاهزة', devices:['بروجكتر','مكيف'],                    notes:'' },
+  { id:18, num:'3008', floor:'الدور الأول',  size:'صغيرة',    capacity:30,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:19, num:'3009', floor:'الدور الأول',  size:'متوسطة',   capacity:30,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:20, num:'3010', floor:'الدور الأول',  size:'متوسطة',   capacity:30,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:21, num:'3011', floor:'الدور الأول',  size:'صغيرة',    capacity:30,  status:'جاهزة', devices:[],                                     notes:'' },
+  { id:22, num:'3013', floor:'الدور الأول',  size:'صغيرة',    capacity:30,  status:'جاهزة', devices:[],                                     notes:'' },
+  { id:23, num:'3014', floor:'الدور الأول',  size:'صغيرة',    capacity:30,  status:'جاهزة', devices:[],                                     notes:'' },
+  { id:24, num:'3015', floor:'الدور الأول',  size:'صغيرة',    capacity:30,  status:'جاهزة', devices:[],                                     notes:'' },
+  { id:25, num:'3018', floor:'الدور الأول',  size:'متوسطة',   capacity:45,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:26, num:'3019', floor:'الدور الأول',  size:'صغيرة',    capacity:25,  status:'جاهزة', devices:[],                                     notes:'' },
+  { id:27, num:'3020', floor:'الدور الأول',  size:'متوسطة',   capacity:45,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:28, num:'3021', floor:'الدور الأول',  size:'متوسطة',   capacity:45,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:29, num:'3025', floor:'الدور الأول',  size:'كبيرة',    capacity:80,  status:'جاهزة', devices:['بروجكتر','مكيف','سبورة عادية'],     notes:'' },
+  { id:30, num:'3026', floor:'الدور الأول',  size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:31, num:'3027', floor:'الدور الأول',  size:'صغيرة',    capacity:25,  status:'جاهزة', devices:[],                                     notes:'' },
+  { id:32, num:'3032', floor:'الدور الأول',  size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:33, num:'3033', floor:'الدور الأول',  size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:34, num:'3034', floor:'الدور الأول',  size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:35, num:'3035', floor:'الدور الأول',  size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:36, num:'3038', floor:'الدور الأول',  size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:37, num:'3039', floor:'الدور الأول',  size:'صغيرة',    capacity:25,  status:'جاهزة', devices:[],                                     notes:'' },
+  { id:38, num:'3040', floor:'الدور الأول',  size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:39, num:'3041', floor:'الدور الأول',  size:'صغيرة',    capacity:25,  status:'جاهزة', devices:[],                                     notes:'' },
+  { id:40, num:'3058', floor:'الدور الأول',  size:'كبيرة',    capacity:120, status:'جاهزة', devices:['بروجكتر','مكيف','مكبر صوت'],        notes:'' },
+  { id:41, num:'3059', floor:'الدور الأول',  size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:42, num:'3060', floor:'الدور الأول',  size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:43, num:'3067', floor:'الدور الأول',  size:'كبيرة',    capacity:125, status:'جاهزة', devices:['بروجكتر','مكيف','مكبر صوت'],        notes:'قاعة محاضرات كبرى' },
+  { id:44, num:'3069', floor:'الدور الأول',  size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:45, num:'3088', floor:'الدور الأول',  size:'كبيرة',    capacity:110, status:'جاهزة', devices:['بروجكتر','مكيف','مكبر صوت'],        notes:'' },
+  { id:46, num:'3090', floor:'الدور الأول',  size:'كبيرة',    capacity:100, status:'جاهزة', devices:['بروجكتر','مكيف'],                    notes:'' },
+  { id:47, num:'3108', floor:'الدور الأول',  size:'متوسطة',   capacity:45,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:48, num:'3110', floor:'الدور الأول',  size:'متوسطة',   capacity:45,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:49, num:'3115', floor:'الدور الأول',  size:'متوسطة',   capacity:45,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+
+  // الدور الثاني - 13 قاعة
+  { id:50, num:'4009', floor:'الدور الثاني', size:'صغيرة',    capacity:25,  status:'جاهزة', devices:[],                                     notes:'' },
+  { id:51, num:'4021', floor:'الدور الثاني', size:'متوسطة',   capacity:55,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:52, num:'4029', floor:'الدور الثاني', size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:53, num:'4031', floor:'الدور الثاني', size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:54, num:'4032', floor:'الدور الثاني', size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:55, num:'4033', floor:'الدور الثاني', size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:56, num:'4037', floor:'الدور الثاني', size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:57, num:'4039', floor:'الدور الثاني', size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:58, num:'4040', floor:'الدور الثاني', size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:59, num:'4041', floor:'الدور الثاني', size:'صغيرة',    capacity:25,  status:'جاهزة', devices:[],                                     notes:'' },
+  { id:60, num:'4042', floor:'الدور الثاني', size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:61, num:'4045', floor:'الدور الثاني', size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+  { id:62, num:'4047', floor:'الدور الثاني', size:'متوسطة',   capacity:50,  status:'جاهزة', devices:['بروجكتر'],                            notes:'' },
+];
+
+// ── تحميل وحفظ من localStorage ──
+function loadData() {
+  const saved = localStorage.getItem('qu_rooms');
+  if (saved) rooms = JSON.parse(saved);
+}
+function saveData() {
+  localStorage.setItem('qu_rooms', JSON.stringify(rooms));
+}
+
+
+// ── مساعدات ──
+function badgeClass(s) {
+  if (s === 'جاهزة') return 'badge-ready';
+  if (s === 'صيانة') return 'badge-maint';
+  return 'badge-closed';
+}
+function dotClass(s) {
+  if (s === 'جاهزة') return 'dot-ready';
+  if (s === 'صيانة') return 'dot-maint';
+  return 'dot-closed';
+}
+function cardClass(s) {
+  if (s === 'صيانة') return 'card maint';
+  if (s === 'مغلقة') return 'card closed';
+  return 'card';
+}
+
+// ── الرندر الرئيسي ──
+function render() {
+  const q = (document.getElementById('search').value || '').toLowerCase();
+  const ff = document.getElementById('f-floor').value;
+  const fs = document.getElementById('f-status').value;
+  const fz = document.getElementById('f-size').value;
+
+  const filtered = rooms.filter(r => {
+    if (q && !r.num.includes(q) && !r.floor.includes(q)) return false;
+    if (ff && r.floor !== ff) return false;
+    if (fs && r.status !== fs) return false;
+    if (fz && r.size !== fz) return false;
+    return true;
+  });
+
+  // إحصائيات
+  document.getElementById('total-count').textContent = rooms.length;
+  document.getElementById('s-ready').textContent  = rooms.filter(r => r.status === 'جاهزة').length;
+  document.getElementById('s-maint').textContent  = rooms.filter(r => r.status === 'صيانة').length;
+  document.getElementById('s-closed').textContent = rooms.filter(r => r.status === 'مغلقة').length;
+  document.getElementById('s-seats').textContent  = rooms.reduce((a, r) => a + r.capacity, 0).toLocaleString();
+
+  if (filtered.length === 0) {
+    document.getElementById('content').innerHTML = '<div class="empty">لا توجد قاعات مطابقة للبحث</div>';
+    return;
+  }
+
+  // تجميع حسب الدور
+  const floors = [...new Set(filtered.map(r => r.floor))];
+  const floorOrder = ['الدور الأرضي', 'الدور الأول', 'الدور الثاني'];
+  floors.sort((a, b) => floorOrder.indexOf(a) - floorOrder.indexOf(b));
+
+  let html = '';
+  for (const floor of floors) {
+    const floorRooms = filtered.filter(r => r.floor === floor);
+    html += `
+      <div class="floor-section">
+        <div class="floor-title">
+          <span class="floor-badge">${floor}</span>
+          <div class="floor-line"></div>
+          <span class="floor-count">${floorRooms.length} قاعة</span>
+        </div>
+        <div class="grid">
+          ${floorRooms.map(r => `
+            <div class="${cardClass(r.status)}" onclick="openRoom(${r.id})">
+              <div class="card-num">قاعة ${r.num}</div>
+              <div class="card-size">${r.size} | ${r.floor}</div>
+              <div class="card-meta">
+                <span class="cap-badge">${r.capacity} مقعد</span>
+                <span class="status-badge ${badgeClass(r.status)}">
+                  <span class="status-dot ${dotClass(r.status)}"></span>
+                  ${r.status}
+                </span>
+              </div>
+              <div class="card-devices">
+                ${r.devices.slice(0, 3).map(d => `<span class="dev-tag">${d}</span>`).join('')}
+                ${r.devices.length > 3 ? `<span class="dev-tag">+${r.devices.length - 3}</span>` : ''}
+                ${r.devices.length === 0 ? '<span class="dev-tag" style="color:#aaa">لا أجهزة</span>' : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  document.getElementById('content').innerHTML = html;
+}
+
+// ── فتح تفاصيل قاعة ──
+function openRoom(id) {
+  const r = rooms.find(x => x.id === id);
+  document.getElementById('modal').innerHTML = `
+    <div class="modal-head">
+      <div>
+        <div class="modal-num">قاعة ${r.num}</div>
+        <div class="modal-sub">${r.floor} · حجم ${r.size}</div>
+      </div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="info-grid">
+      <div class="info-box">
+        <div class="info-box-label">السعة</div>
+        <div class="info-box-val">${r.capacity} مقعد</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">الحالة</div>
+        <div class="info-box-val">
+          <span class="status-badge ${badgeClass(r.status)}">
+            <span class="status-dot ${dotClass(r.status)}"></span>
+            ${r.status}
+          </span>
+        </div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">الدور</div>
+        <div class="info-box-val">${r.floor}</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">الحجم</div>
+        <div class="info-box-val">${r.size}</div>
+      </div>
+    </div>
+    <div class="devices-section">
+      <div class="section-label">الأجهزة والتجهيزات</div>
+      <div class="devices-list">
+        ${r.devices.length > 0
+          ? r.devices.map(d => `<span class="dev-pill">${d}</span>`).join('')
+          : '<span style="font-size:13px;color:var(--muted)">لا توجد أجهزة مسجلة</span>'
+        }
+      </div>
+    </div>
+    <div class="section-label">ملاحظات</div>
+    <div class="notes-box">${r.notes || 'لا توجد ملاحظات'}</div>
+    <div class="action-row">
+      <button class="btn-edit" onclick="openEdit(${r.id})">تعديل البيانات</button>
+      <button class="btn-del" onclick="confirmDelete(${r.id})">حذف</button>
+    </div>
+  `;
+  document.getElementById('overlay').classList.add('active');
+}
+
+// ── نموذج التعديل ──
+function openEdit(id) {
+  const r = rooms.find(x => x.id === id);
+  document.getElementById('modal').innerHTML = `
+    <div class="modal-head">
+      <div>
+        <div class="modal-num">تعديل — قاعة ${r.num}</div>
+      </div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <label class="edit-label">رقم القاعة</label>
+    <input class="edit-input" id="e-num" value="${r.num}">
+
+    <label class="edit-label">الدور</label>
+    <select class="edit-select" id="e-floor">
+      ${['الدور الأرضي','الدور الأول','الدور الثاني'].map(f =>
+        `<option ${f === r.floor ? 'selected' : ''}>${f}</option>`).join('')}
+    </select>
+
+    <label class="edit-label">الحجم</label>
+    <select class="edit-select" id="e-size">
+      ${['كبيرة','متوسطة','صغيرة'].map(s =>
+        `<option ${s === r.size ? 'selected' : ''}>${s}</option>`).join('')}
+    </select>
+
+    <label class="edit-label">السعة (عدد المقاعد)</label>
+    <input class="edit-input" id="e-cap" type="number" value="${r.capacity}" min="5" max="500">
+
+    <label class="edit-label">الحالة</label>
+    <select class="edit-select" id="e-status">
+      ${['جاهزة','صيانة','مغلقة'].map(s =>
+        `<option ${s === r.status ? 'selected' : ''}>${s}</option>`).join('')}
+    </select>
+
+    <label class="edit-label">الأجهزة والتجهيزات</label>
+    <div class="cb-group" id="cb-group">
+      ${DEVICES.map(d => `
+        <label class="cb-item ${r.devices.includes(d) ? 'checked' : ''}" onclick="toggleCb(this, event)">
+          <input type="checkbox" value="${d}" ${r.devices.includes(d) ? 'checked' : ''}> ${d}
+        </label>
+      `).join('')}
+    </div>
+
+    <label class="edit-label">ملاحظات</label>
+    <textarea class="edit-textarea" id="e-notes">${r.notes}</textarea>
+
+    <div class="form-actions">
+      <button class="btn-save" onclick="saveEdit(${r.id})">حفظ التغييرات</button>
+      <button class="btn-cancel" onclick="openRoom(${r.id})">رجوع</button>
+    </div>
+  `;
+}
+
+function toggleCb(el, event) {
+  if(event) event.preventDefault();
+  el.classList.toggle('checked');
+  el.querySelector('input').checked = el.classList.contains('checked');
+}
+
+function saveEdit(id) {
+  const r = rooms.find(x => x.id === id);
+  r.num      = document.getElementById('e-num').value.trim() || r.num;
+  r.floor    = document.getElementById('e-floor').value;
+  r.size     = document.getElementById('e-size').value;
+  r.capacity = parseInt(document.getElementById('e-cap').value) || r.capacity;
+  r.status   = document.getElementById('e-status').value;
+  r.devices  = [...document.querySelectorAll('#cb-group input:checked')].map(c => c.value);
+  r.notes    = document.getElementById('e-notes').value.trim();
+  
+  closeModal();
+  saveData();
+  render();
+}
+
+function confirmDelete(id) {
+  const r = rooms.find(x => x.id === id);
+  if (confirm(`هل تريد حذف قاعة ${r.num}؟`)) {
+    rooms = rooms.filter(x => x.id !== id);
+    closeModal();
+    saveData();
+    render();
+  }
+}
+
+// ── إضافة قاعة جديدة ──
+function openAdd() {
+  document.getElementById('modal').innerHTML = `
+    <div class="modal-head">
+      <div class="modal-num">إضافة قاعة جديدة</div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <label class="edit-label">رقم القاعة</label>
+    <input class="edit-input" id="e-num" placeholder="مثال: 4050">
+
+    <label class="edit-label">الدور</label>
+    <select class="edit-select" id="e-floor">
+      <option>الدور الأرضي</option>
+      <option>الدور الأول</option>
+      <option>الدور الثاني</option>
+    </select>
+
+    <label class="edit-label">الحجم</label>
+    <select class="edit-select" id="e-size">
+      <option>كبيرة</option><option selected>متوسطة</option><option>صغيرة</option>
+    </select>
+
+    <label class="edit-label">السعة (عدد المقاعد)</label>
+    <input class="edit-input" id="e-cap" type="number" value="50" min="5" max="500">
+
+    <label class="edit-label">الحالة</label>
+    <select class="edit-select" id="e-status">
+      <option>جاهزة</option><option>صيانة</option><option>مغلقة</option>
+    </select>
+
+    <label class="edit-label">الأجهزة والتجهيزات</label>
+    <div class="cb-group" id="cb-group">
+      ${DEVICES.map(d => `
+        <label class="cb-item" onclick="toggleCb(this, event)">
+          <input type="checkbox" value="${d}"> ${d}
+        </label>
+      `).join('')}
+    </div>
+
+    <label class="edit-label">ملاحظات</label>
+    <textarea class="edit-textarea" id="e-notes" placeholder="أي ملاحظات إضافية..."></textarea>
+
+    <div class="form-actions">
+      <button class="btn-save" onclick="saveNew()">إضافة القاعة</button>
+      <button class="btn-cancel" onclick="closeModal()">إلغاء</button>
+    </div>
+  `;
+  document.getElementById('overlay').classList.add('active');
+}
+
+function saveNew() {
+  const num = document.getElementById('e-num').value.trim();
+  if (!num) { alert('أدخل رقم القاعة'); return; }
+  const newId = rooms.length > 0 ? Math.max(...rooms.map(r => r.id)) + 1 : 1;
+  rooms.push({
+    id: newId,
+    num,
+    floor:    document.getElementById('e-floor').value,
+    size:     document.getElementById('e-size').value,
+    capacity: parseInt(document.getElementById('e-cap').value) || 50,
+    status:   document.getElementById('e-status').value,
+    devices:  [...document.querySelectorAll('#cb-group input:checked')].map(c => c.value),
+    notes:    document.getElementById('e-notes').value.trim()
+  });
+  
+  closeModal();
+  saveData();
+  render();
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('active');
+}
+
+loadData();
+render();
+</script>
+</body>
+</html>
