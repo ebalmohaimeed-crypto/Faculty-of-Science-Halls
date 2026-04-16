@@ -442,6 +442,7 @@
 
   .admin-only { display: none; }
   .admin-mode .admin-only { display: inline-flex; }
+  .admin-mode .form-actions.admin-only { display: flex; }
   .login-btn {
     height: 40px; padding: 0 16px;
     background: rgba(255,255,255,0.15);
@@ -828,9 +829,9 @@ function openRoom(id) {
     </div>
     <div class="section-label">ملاحظات</div>
     <div class="notes-box">${r.notes || 'لا توجد ملاحظات'}</div>
-    <div style="display:flex; gap:8px; margin-top:1rem;">
-      <button class="btn-edit admin-only" onclick="openEdit(${r.id})">تعديل البيانات</button>
-      <button class="btn-del admin-only" onclick="confirmDelete(${r.id})">حذف</button>
+    <div class="form-actions admin-only" style="display:flex;">
+      <button class="btn-save" onclick="openEdit(${r.id})">تعديل البيانات</button>
+      <button class="btn-cancel" onclick="confirmDelete(${r.id})" style="color:var(--red); border-color:#FDECEA;">حذف</button>
     </div>
   `;
   document.getElementById('overlay').classList.add('active');
