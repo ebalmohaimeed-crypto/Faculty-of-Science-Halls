@@ -502,6 +502,16 @@
     <span class="stat-label">إجمالي المقاعد:</span>
     <span class="stat-num" id="s-seats">0</span>
   </div>
+  <div class="stat-item">
+    <div class="stat-dot" style="background:#1A8040"></div>
+    <span class="stat-label">بروجكتر شغال:</span>
+    <span class="stat-num" id="s-proj-good">0</span>
+  </div>
+  <div class="stat-item">
+    <div class="stat-dot" style="background:#C0392B"></div>
+    <span class="stat-label">بروجكتر معطل:</span>
+    <span class="stat-num" id="s-proj-broken">0</span>
+  </div>
 </div>
 
 <div class="controls">
@@ -567,8 +577,10 @@ function toggleAdmin() {
   }
 }
 
-const DEVICES = ['بروجكتر','سبورة ذكية','واي فاي','مكبر صوت','شاشة تفاعلية','سبورة عادية'];
-const BROKEN_TAG = 'بروجكتر معطل ⚠️';
+const DEVICES = ['سبورة ذكية','منصة علمية','جهاز كمبيوتر','مايك','سبورة عادية'];
+const PROJ_GOOD = 'بروجكتر ممتاز';
+const PROJ_MAINT = 'بروجكتر يحتاج صيانة';
+const BROKEN_TAG = 'بروجكتر معطل';
 
 // ── البيانات الحقيقية من ملف حصر القاعات ──
 let rooms = [
@@ -752,6 +764,8 @@ function render() {
   document.getElementById('s-maint').textContent  = rooms.filter(r => r.status === 'صيانة').length;
   document.getElementById('s-closed').textContent = rooms.filter(r => r.status === 'مغلقة').length;
   document.getElementById('s-seats').textContent  = rooms.reduce((a, r) => a + r.capacity, 0).toLocaleString();
+  document.getElementById('s-proj-good').textContent = rooms.filter(r => r.devices.includes(PROJ_GOOD)).length;
+  document.getElementById('s-proj-broken').textContent = rooms.filter(r => r.devices.includes(BROKEN_TAG) || r.devices.includes(PROJ_MAINT)).length;
 
   if (filtered.length === 0) {
     document.getElementById('content').innerHTML = '<div class="empty">لا توجد قاعات مطابقة للبحث</div>';
@@ -786,9 +800,10 @@ function render() {
                 </span>
               </div>
               <div class="card-devices">
-                ${r.devices.includes(BROKEN_TAG) ? `<span class="dev-tag-broken">⚠️ بروجكتر معطل</span>` : ''}
-                ${r.devices.filter(d => d !== BROKEN_TAG).slice(0, 3).map(d => `<span class="dev-tag">${d}</span>`).join('')}
-                ${r.devices.filter(d => d !== BROKEN_TAG).length > 3 ? `<span class="dev-tag">+${r.devices.filter(d => d !== BROKEN_TAG).length - 3}</span>` : ''}
+                ${r.devices.includes(PROJ_GOOD) ? `<span class="dev-tag" style="background:#E8F5F0;color:#0F6E56;">✅ بروجكتر ممتاز</span>` : ''}
+                ${r.devices.includes(PROJ_MAINT) ? `<span class="dev-tag" style="background:#FFF3CD;color:#8B6000;">🔧 يحتاج صيانة</span>` : ''}
+                ${r.devices.includes(BROKEN_TAG) ? `<span class="dev-tag-broken">⚠️ معطل تماماً</span>` : ''}
+                ${r.devices.filter(d => d !== BROKEN_TAG && d !== PROJ_GOOD && d !== PROJ_MAINT).slice(0, 2).map(d => `<span class="dev-tag">${d}</span>`).join('')}
                 ${r.devices.length === 0 ? '<span class="dev-tag" style="color:#aaa">لا أجهزة</span>' : ''}
               </div>
             </div>
@@ -887,6 +902,14 @@ function openEdit(id) {
         `<option ${s === r.status ? 'selected' : ''}>${s}</option>`).join('')}
     </select>
 
+    <label class="edit-label">حالة البروجكتر</label>
+    <select class="edit-select" id="e-projector">
+      <option value="none" ${!r.devices.includes('بروجكتر ممتاز') && !r.devices.includes('بروجكتر يحتاج صيانة') && !r.devices.includes('بروجكتر معطل') ? 'selected' : ''}>لا يوجد بروجكتر</option>
+      <option value="good" ${r.devices.includes('بروجكتر ممتاز') ? 'selected' : ''}>✅ ممتاز</option>
+      <option value="maint" ${r.devices.includes('بروجكتر يحتاج صيانة') ? 'selected' : ''}>🔧 يحتاج صيانة</option>
+      <option value="broken" ${r.devices.includes('بروجكتر معطل') ? 'selected' : ''}>⚠️ معطل تماماً</option>
+    </select>
+
     <label class="edit-label">الأجهزة والتجهيزات</label>
     <div class="cb-group" id="cb-group">
       ${DEVICES.map(d => `
@@ -894,9 +917,6 @@ function openEdit(id) {
           <input type="checkbox" value="${d}" ${r.devices.includes(d) ? 'checked' : ''}> ${d}
         </label>
       `).join('')}
-      <label class="cb-item ${r.devices.includes(BROKEN_TAG) ? 'checked' : ''}" onclick="toggleCb(this, event)" style="background:#FDECEA; border-color:#F5B7B1; color:#C0392B;">
-        <input type="checkbox" value="${BROKEN_TAG}" ${r.devices.includes(BROKEN_TAG) ? 'checked' : ''}> ⚠️ بروجكتر معطل
-      </label>
     </div>
 
     <label class="edit-label">ملاحظات</label>
@@ -922,7 +942,12 @@ async function saveEdit(id) {
   r.size     = document.getElementById('e-size').value;
   r.capacity = parseInt(document.getElementById('e-cap').value) || r.capacity;
   r.status   = document.getElementById('e-status').value;
-  r.devices  = [...document.querySelectorAll('#cb-group input:checked')].map(c => c.value);
+  const proj = document.getElementById('e-projector').value;
+  const otherDevices = [...document.querySelectorAll('#cb-group input:checked')].map(c => c.value);
+  r.devices = [
+    ...(proj === 'good' ? ['بروجكتر ممتاز'] : proj === 'maint' ? ['بروجكتر يحتاج صيانة'] : proj === 'broken' ? ['بروجكتر معطل'] : []),
+    ...otherDevices
+  ];
   r.notes    = document.getElementById('e-notes').value.trim();
   
   closeModal();
@@ -970,6 +995,14 @@ function openAdd() {
       <option>جاهزة</option><option>صيانة</option><option>مغلقة</option>
     </select>
 
+    <label class="edit-label">حالة البروجكتر</label>
+    <select class="edit-select" id="e-projector">
+      <option value="none">لا يوجد بروجكتر</option>
+      <option value="good">✅ ممتاز</option>
+      <option value="maint">🔧 يحتاج صيانة</option>
+      <option value="broken">⚠️ معطل تماماً</option>
+    </select>
+
     <label class="edit-label">الأجهزة والتجهيزات</label>
     <div class="cb-group" id="cb-group">
       ${DEVICES.map(d => `
@@ -994,16 +1027,22 @@ async function saveNew() {
   const num = document.getElementById('e-num').value.trim();
   if (!num) { alert('أدخل رقم القاعة'); return; }
   const newId = rooms.length > 0 ? Math.max(...rooms.map(r => r.id)) + 1 : 1;
-  rooms.push({
+  const projNew = document.getElementById('e-projector').value;
+  const otherNew = [...document.querySelectorAll('#cb-group input:checked')].map(c => c.value);
+  const newRoom = {
     id: newId,
     num,
     floor:    document.getElementById('e-floor').value,
     size:     document.getElementById('e-size').value,
     capacity: parseInt(document.getElementById('e-cap').value) || 50,
     status:   document.getElementById('e-status').value,
-    devices:  [...document.querySelectorAll('#cb-group input:checked')].map(c => c.value),
+    devices:  [
+      ...(projNew === 'good' ? ['بروجكتر ممتاز'] : projNew === 'maint' ? ['بروجكتر يحتاج صيانة'] : projNew === 'broken' ? ['بروجكتر معطل'] : []),
+      ...otherNew
+    ],
     notes:    document.getElementById('e-notes').value.trim()
-  });
+  };
+  rooms.push(newRoom);
   
   const created = await addRoom(newRoom);
   if(created) { rooms[rooms.length-1].id = created.id; }
