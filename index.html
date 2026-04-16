@@ -508,6 +508,11 @@
     <span class="stat-num" id="s-proj-good">0</span>
   </div>
   <div class="stat-item">
+    <div class="stat-dot" style="background:#E8A020"></div>
+    <span class="stat-label">بروجكتر يحتاج صيانة:</span>
+    <span class="stat-num" id="s-proj-maint">0</span>
+  </div>
+  <div class="stat-item">
     <div class="stat-dot" style="background:#C0392B"></div>
     <span class="stat-label">بروجكتر معطل:</span>
     <span class="stat-num" id="s-proj-broken">0</span>
@@ -578,7 +583,7 @@ function toggleAdmin() {
 }
 
 const DEVICES = ['سبورة ذكية','منصة علمية','جهاز كمبيوتر','مايك','سبورة عادية','واي فاي'];
-const PROJ_GOOD = 'بروجكتر ممتاز';
+const PROJ_GOOD = 'بروجكتر';
 const PROJ_MAINT = 'بروجكتر يحتاج صيانة';
 const BROKEN_TAG = 'بروجكتر معطل';
 
@@ -765,7 +770,8 @@ function render() {
   document.getElementById('s-closed').textContent = rooms.filter(r => r.status === 'مغلقة').length;
   document.getElementById('s-seats').textContent  = rooms.reduce((a, r) => a + r.capacity, 0).toLocaleString();
   document.getElementById('s-proj-good').textContent = rooms.filter(r => r.devices.includes(PROJ_GOOD)).length;
-  document.getElementById('s-proj-broken').textContent = rooms.filter(r => r.devices.includes(BROKEN_TAG) || r.devices.includes(PROJ_MAINT)).length;
+  document.getElementById('s-proj-maint').textContent = rooms.filter(r => r.devices.includes(PROJ_MAINT)).length;
+  document.getElementById('s-proj-broken').textContent = rooms.filter(r => r.devices.includes(BROKEN_TAG)).length;
 
   if (filtered.length === 0) {
     document.getElementById('content').innerHTML = '<div class="empty">لا توجد قاعات مطابقة للبحث</div>';
@@ -800,7 +806,7 @@ function render() {
                 </span>
               </div>
               <div class="card-devices">
-                ${r.devices.includes(PROJ_GOOD) ? `<span class="dev-tag" style="background:#E8F5F0;color:#0F6E56;">✅ بروجكتر ممتاز</span>` : ''}
+                ${r.devices.includes(PROJ_GOOD) ? `<span class="dev-tag" style="background:#E8F5F0;color:#0F6E56;">✅ بروجكتر</span>` : ''}
                 ${r.devices.includes(PROJ_MAINT) ? `<span class="dev-tag" style="background:#FFF3CD;color:#8B6000;">🔧 يحتاج صيانة</span>` : ''}
                 ${r.devices.includes(BROKEN_TAG) ? `<span class="dev-tag-broken">⚠️ بروجكتر معطل</span>` : ''}
                 ${r.devices.filter(d => d !== BROKEN_TAG && d !== PROJ_GOOD && d !== PROJ_MAINT).slice(0, 2).map(d => `<span class="dev-tag">${d}</span>`).join('')}
@@ -905,7 +911,7 @@ function openEdit(id) {
     <label class="edit-label">حالة البروجكتر</label>
     <select class="edit-select" id="e-projector">
       <option value="none" ${!r.devices.includes('بروجكتر ممتاز') && !r.devices.includes('بروجكتر يحتاج صيانة') && !r.devices.includes('بروجكتر معطل') ? 'selected' : ''}>لا يوجد بروجكتر</option>
-      <option value="good" ${r.devices.includes('بروجكتر ممتاز') ? 'selected' : ''}>✅ ممتاز</option>
+      <option value="good" ${r.devices.includes('بروجكتر') && !r.devices.includes('بروجكتر يحتاج صيانة') && !r.devices.includes('بروجكتر معطل') ? 'selected' : ''}>✅ ممتاز</option>
       <option value="maint" ${r.devices.includes('بروجكتر يحتاج صيانة') ? 'selected' : ''}>🔧 يحتاج صيانة</option>
       <option value="broken" ${r.devices.includes('بروجكتر معطل') ? 'selected' : ''}>⚠️ بروجكتر معطل</option>
     </select>
@@ -945,7 +951,7 @@ async function saveEdit(id) {
   const proj = document.getElementById('e-projector').value;
   const otherDevices = [...document.querySelectorAll('#cb-group input:checked')].map(c => c.value);
   r.devices = [
-    ...(proj === 'good' ? ['بروجكتر ممتاز'] : proj === 'maint' ? ['بروجكتر يحتاج صيانة'] : proj === 'broken' ? ['بروجكتر معطل'] : []),
+    ...(proj === 'good' ? ['بروجكتر'] : proj === 'maint' ? ['بروجكتر يحتاج صيانة'] : proj === 'broken' ? ['بروجكتر معطل'] : []),
     ...otherDevices
   ];
   r.notes    = document.getElementById('e-notes').value.trim();
@@ -1037,7 +1043,7 @@ async function saveNew() {
     capacity: parseInt(document.getElementById('e-cap').value) || 50,
     status:   document.getElementById('e-status').value,
     devices:  [
-      ...(projNew === 'good' ? ['بروجكتر ممتاز'] : projNew === 'maint' ? ['بروجكتر يحتاج صيانة'] : projNew === 'broken' ? ['بروجكتر معطل'] : []),
+      ...(projNew === 'good' ? ['بروجكتر'] : projNew === 'maint' ? ['بروجكتر يحتاج صيانة'] : projNew === 'broken' ? ['بروجكتر معطل'] : []),
       ...otherNew
     ],
     notes:    document.getElementById('e-notes').value.trim()
