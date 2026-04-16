@@ -829,7 +829,7 @@ function openRoom(id) {
     </div>
     <div class="section-label">ملاحظات</div>
     <div class="notes-box">${r.notes || 'لا توجد ملاحظات'}</div>
-    <div class="form-actions admin-only" style="display:flex;">
+    <div class="form-actions admin-only">
       <button class="btn-save" onclick="openEdit(${r.id})">تعديل البيانات</button>
       <button class="btn-cancel" onclick="confirmDelete(${r.id})" style="color:var(--red); border-color:#FDECEA;">حذف</button>
     </div>
