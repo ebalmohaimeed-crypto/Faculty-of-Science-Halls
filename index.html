@@ -828,9 +828,9 @@ function openRoom(id) {
     </div>
     <div class="section-label">ملاحظات</div>
     <div class="notes-box">${r.notes || 'لا توجد ملاحظات'}</div>
-    <div style="display:flex; gap:8px; margin-top:1rem; justify-content:center;">
-      <button class="btn-edit admin-only" onclick="openEdit(${r.id})" style="flex:1; max-width:320px;">تعديل البيانات</button>
-      <button class="btn-del admin-only" onclick="confirmDelete(${r.id})">حذف</button>
+    <div style="display:flex; gap:8px; margin-top:1rem;">
+      <button class="btn-edit admin-only" onclick="openEdit(${r.id})" style="flex:1;">تعديل البيانات</button>
+      <button class="btn-del admin-only" onclick="confirmDelete(${r.id})" style="width:70px; flex-shrink:0;">حذف</button>
     </div>
   `;
   document.getElementById('overlay').classList.add('active');
