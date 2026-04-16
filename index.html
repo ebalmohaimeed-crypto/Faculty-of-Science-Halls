@@ -236,6 +236,14 @@
   .badge-maint { background: var(--warn-bg); color: var(--warn-text); }
   .badge-closed { background: var(--danger-bg); color: var(--danger-text); }
   .card-devices { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+  .dev-tag-broken {
+    font-size: 10px;
+    background: #FDECEA;
+    color: #C0392B;
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-weight: 600;
+  }
   .dev-tag {
     font-size: 10px;
     background: #F0F4FF;
@@ -560,6 +568,7 @@ function toggleAdmin() {
 }
 
 const DEVICES = ['بروجكتر','سبورة ذكية','واي فاي','مكبر صوت','شاشة تفاعلية','سبورة عادية'];
+const BROKEN_TAG = 'بروجكتر معطل ⚠️';
 
 // ── البيانات الحقيقية من ملف حصر القاعات ──
 let rooms = [
@@ -777,8 +786,9 @@ function render() {
                 </span>
               </div>
               <div class="card-devices">
-                ${r.devices.slice(0, 3).map(d => `<span class="dev-tag">${d}</span>`).join('')}
-                ${r.devices.length > 3 ? `<span class="dev-tag">+${r.devices.length - 3}</span>` : ''}
+                ${r.devices.includes(BROKEN_TAG) ? `<span class="dev-tag-broken">⚠️ بروجكتر معطل</span>` : ''}
+                ${r.devices.filter(d => d !== BROKEN_TAG).slice(0, 3).map(d => `<span class="dev-tag">${d}</span>`).join('')}
+                ${r.devices.filter(d => d !== BROKEN_TAG).length > 3 ? `<span class="dev-tag">+${r.devices.filter(d => d !== BROKEN_TAG).length - 3}</span>` : ''}
                 ${r.devices.length === 0 ? '<span class="dev-tag" style="color:#aaa">لا أجهزة</span>' : ''}
               </div>
             </div>
@@ -884,6 +894,9 @@ function openEdit(id) {
           <input type="checkbox" value="${d}" ${r.devices.includes(d) ? 'checked' : ''}> ${d}
         </label>
       `).join('')}
+      <label class="cb-item ${r.devices.includes(BROKEN_TAG) ? 'checked' : ''}" onclick="toggleCb(this, event)" style="background:#FDECEA; border-color:#F5B7B1; color:#C0392B;">
+        <input type="checkbox" value="${BROKEN_TAG}" ${r.devices.includes(BROKEN_TAG) ? 'checked' : ''}> ⚠️ بروجكتر معطل
+      </label>
     </div>
 
     <label class="edit-label">ملاحظات</label>
