@@ -440,7 +440,7 @@
   .btn-export:hover { border-color: var(--teal); color: var(--teal); }
 
 
-  .admin-only { display: none; }
+  .admin-only { visibility: hidden; }
   .admin-mode .admin-only { display: inline-flex; }
   .login-btn {
     height: 40px; padding: 0 16px;
@@ -828,8 +828,8 @@ function openRoom(id) {
     </div>
     <div class="section-label">ملاحظات</div>
     <div class="notes-box">${r.notes || 'لا توجد ملاحظات'}</div>
-    <div class="action-row" style="justify-content: center;">
-      <button class="btn-edit admin-only" onclick="openEdit(${r.id})" style="max-width:300px;">تعديل البيانات</button>
+    <div class="action-row">
+      <button class="btn-edit admin-only" onclick="openEdit(${r.id})">تعديل البيانات</button>
       <button class="btn-del admin-only" onclick="confirmDelete(${r.id})">حذف</button>
     </div>
   `;
