@@ -802,7 +802,7 @@ function render() {
               <div class="card-devices">
                 ${r.devices.includes(PROJ_GOOD) ? `<span class="dev-tag" style="background:#E8F5F0;color:#0F6E56;">✅ بروجكتر ممتاز</span>` : ''}
                 ${r.devices.includes(PROJ_MAINT) ? `<span class="dev-tag" style="background:#FFF3CD;color:#8B6000;">🔧 يحتاج صيانة</span>` : ''}
-                ${r.devices.includes(BROKEN_TAG) ? `<span class="dev-tag-broken">⚠️ معطل تماماً</span>` : ''}
+                ${r.devices.includes(BROKEN_TAG) ? `<span class="dev-tag-broken">⚠️ بروجكتر معطل</span>` : ''}
                 ${r.devices.filter(d => d !== BROKEN_TAG && d !== PROJ_GOOD && d !== PROJ_MAINT).slice(0, 2).map(d => `<span class="dev-tag">${d}</span>`).join('')}
                 ${r.devices.length === 0 ? '<span class="dev-tag" style="color:#aaa">لا أجهزة</span>' : ''}
               </div>
@@ -907,7 +907,7 @@ function openEdit(id) {
       <option value="none" ${!r.devices.includes('بروجكتر ممتاز') && !r.devices.includes('بروجكتر يحتاج صيانة') && !r.devices.includes('بروجكتر معطل') ? 'selected' : ''}>لا يوجد بروجكتر</option>
       <option value="good" ${r.devices.includes('بروجكتر ممتاز') ? 'selected' : ''}>✅ ممتاز</option>
       <option value="maint" ${r.devices.includes('بروجكتر يحتاج صيانة') ? 'selected' : ''}>🔧 يحتاج صيانة</option>
-      <option value="broken" ${r.devices.includes('بروجكتر معطل') ? 'selected' : ''}>⚠️ معطل تماماً</option>
+      <option value="broken" ${r.devices.includes('بروجكتر معطل') ? 'selected' : ''}>⚠️ بروجكتر معطل</option>
     </select>
 
     <label class="edit-label">الأجهزة والتجهيزات</label>
@@ -1000,7 +1000,7 @@ function openAdd() {
       <option value="none">لا يوجد بروجكتر</option>
       <option value="good">✅ ممتاز</option>
       <option value="maint">🔧 يحتاج صيانة</option>
-      <option value="broken">⚠️ معطل تماماً</option>
+      <option value="broken">⚠️ بروجكتر معطل</option>
     </select>
 
     <label class="edit-label">الأجهزة والتجهيزات</label>
