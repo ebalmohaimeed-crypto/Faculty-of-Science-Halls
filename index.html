@@ -533,6 +533,12 @@
 <script>
 
 const ADMIN_PASSWORD = '1234';
+
+function checkAdmin() {
+  if (isAdmin) return true;
+  alert('يجب تسجيل الدخول كمشرف للقيام بهذا الإجراء');
+  return false;
+}
 let isAdmin = false;
 
 function toggleAdmin() {
@@ -829,9 +835,9 @@ function openRoom(id) {
     </div>
     <div class="section-label">ملاحظات</div>
     <div class="notes-box">${r.notes || 'لا توجد ملاحظات'}</div>
-    <div class="form-actions admin-only">
-      <button class="btn-save" onclick="openEdit(${r.id})">تعديل البيانات</button>
-      <button class="btn-cancel" onclick="confirmDelete(${r.id})" style="color:var(--red); border-color:#FDECEA;">حذف</button>
+    <div class="form-actions">
+      <button class="btn-edit" onclick="checkAdmin() && openEdit(${r.id})">تعديل البيانات</button>
+      <button class="btn-del" onclick="checkAdmin() && confirmDelete(${r.id})">حذف</button>
     </div>
   `;
   document.getElementById('overlay').classList.add('active');
