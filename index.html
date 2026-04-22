@@ -809,7 +809,7 @@ function render() {
                 ${r.devices.includes(PROJ_GOOD) ? `<span class="dev-tag" style="background:#E8F5F0;color:#0F6E56;">✅ بروجكتر</span>` : ''}
                 ${r.devices.includes(PROJ_MAINT) ? `<span class="dev-tag" style="background:#FFF3CD;color:#8B6000;">🔧 بروجكتر يحتاج صيانة</span>` : ''}
                 ${r.devices.includes(BROKEN_TAG) ? `<span class="dev-tag-broken">⚠️ بروجكتر معطل</span>` : ''}
-                ${r.devices.filter(d => d !== BROKEN_TAG && d !== PROJ_GOOD && d !== PROJ_MAINT).slice(0, 2).map(d => `<span class="dev-tag">${d}</span>`).join('')}
+                ${r.devices.filter(d => d !== BROKEN_TAG && d !== PROJ_GOOD && d !== PROJ_MAINT).map(d => `<span class="dev-tag">${d}</span>`).join('')}
                 ${r.devices.length === 0 ? '<span class="dev-tag" style="color:#aaa">لا أجهزة</span>' : ''}
               </div>
             </div>
